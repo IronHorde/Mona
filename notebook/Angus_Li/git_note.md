@@ -176,5 +176,47 @@ liyongjie@liyongjie-X455LD:~/Mona/notebook/Angus_Li$ git log --graph --pretty=on
 liyongjie@liyongjie-X455LD:~/Mona/notebook/Angus_Li$ git branch -d feature
 已删除分支 feature（曾为 aa77782）。
 ```
+### 分支管理策略
+由于在git优先使用fast forward方式合并时,这种方式在删除分支之后分支信息也会随之删除,所以使用**git merge --no-ff -m**则可以不使用Fast forwarf方式,就可以体现分支的信息
+```bash
+liyongjie@liyongjie-X455LD:~/git$ git checkout -b dev
+切换到一个新分支 'dev'
+liyongjie@liyongjie-X455LD:~/git$ vim test.txt 
+liyongjie@liyongjie-X455LD:~/git$ cat test.txt 
+aaaaaaaa
+liyongjie@liyongjie-X455LD:~/git$ vim test.txt 
+liyongjie@liyongjie-X455LD:~/git$ cat test.txt 
+aaaaaaaa
+dev come here!
+liyongjie@liyongjie-X455LD:~/git$ git add test.txt 
+liyongjie@liyongjie-X455LD:~/git$ git commit -m "dev come here"
+[dev 71671e4] dev come here
+ 1 file changed, 1 insertion(+)
+liyongjie@liyongjie-X455LD:~/git$ git checkout master
+切换到分支 'master'
+您的分支与上游分支 'origin/master' 一致。
+liyongjie@liyongjie-X455LD:~/git$ git merge --no-ff -m "merge dev" dev
+Merge made by the 'recursive' strategy.
+ test.txt | 1 +
+ 1 file changed, 1 insertion(+)
+liyongjie@liyongjie-X455LD:~/git$  git log --graph --pretty=oneline --abbrev-commit
+*   1dbf22f merge dev
+|\  
+| * 71671e4 dev come here
+|/  
+* 17c0c4a test
+* 90dd20c modify two times
+* 1e6dcad modify one time
+* 249005a the second time use git
+* 7d75cf1 the first time use git
+```
+### Bug分支
+1. 当未完成手中的工作,不得不改Bug时,可以使用**git stash**将当前工作现场隐藏起来
+2. 然后到需要修复Bug的分支上,建立修复Bug的分支,进行修复
+3. 接着回到刚才工作的分支进行工作,使用**git stash pop**或者不会删除stash内容的**git stash apply**l来进行恢复,但是第二种方法需要使用**git stash drop**来删除stash
+
+### Feature分支
+* 开发一个新feature，最好新建一个分支
+* 如果要丢弃一个没有被合并过的分支，可以通过git branch -D \<name>强行删除。
 
 
