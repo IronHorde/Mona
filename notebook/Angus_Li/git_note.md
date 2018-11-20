@@ -218,5 +218,77 @@ liyongjie@liyongjie-X455LD:~/git$  git log --graph --pretty=oneline --abbrev-com
 ### Feature分支
 * 开发一个新feature，最好新建一个分支
 * 如果要丢弃一个没有被合并过的分支，可以通过git branch -D \<name>强行删除。
+### 多人协作
+* 使用**git push orgin \<branch_name>** 将分支推送到远程仓库
+* 使用**git checkout -b origin/\<branch_name>** 抓取远程仓库的分支
+* 此时便可以在分支上工作了,然后add后commit,但此时如果令一个人也在此分支上对相同分件进行了修改.push步骤哦将失败,只有先pull最新的提交从该分支抓取下来,在本地合并
+* 但在之前,必须使用**git branch --set-upstream-to \<branch-name> origin/\<branch-name>** 使本地dev与远程dev链接
+* 使用**git pull**更新最新提交
+* 解决合并冲突之后,再次提交
+### rabase
+* 在很多人pull和push会让分支变得十分复杂，使用**git rebase**可以让分支重新回到一条直线
+## 标签管理
+### 创建标签
+* 切换到需要打标签的分支上去
+* 使用**git tag \<name>**为最新提交打上标签
+* 可以使用命令**git tag -a \<tagname> -m \"blablabla...\"** 可以指定标签信息
+* **git tag**查看标签
+* **git show \<tag_name>**可以查看说明文字
+### 操作标签
+* 命令**git push origin \<tagname>** 可以推送一个本地标签；
+* 命令**git push origin --tags**可以推送全部未推送过的本地标签；
+* 命令**git tag -d \<tagname>** 可以删除一个本地标签；
+* 命令**git push origin :refs/tags/\<tagname>** 可以删除一个远程标签。
+## 使用github pull request
+* 在GitHub上，可以任意Fork开源仓库；
+* 自己拥有Fork后的仓库的读写权限；
+* 可以推送pull request给官方仓库来贡献代码。
+## 自定义Git
+### 忽略特殊文件
+* 原则:
+    1. 忽略操作系统自动生成的文件，比如缩略图等；
+    2. 忽略编译生成的中间文件、可执行文件等，也就是如果一个文件是通过另一个文件自动生成的，那自动生成的文件就没必要放进版本库，比如Java编译产生的.class文件；
+    3. 忽略你自己的带有敏感信息的配置文件，比如存放口令的配置文件。
+
+
+* 编写.gitignore(如下)
+```
+# Windows:
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python:
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build
+
+# My configurations:
+db.ini
+deploy_key_rsa
+
+``` 
+* 若文件想要传得文件在内,则使用**git add -f**强制加入
+* 能是.gitignore写得有问题，需要找出来到底哪个规则写错了，可以用**git check-ignore**命令检查：
+```
+$ git check-ignore -v App.class
+.gitignore:3:*.class    App.class
+```
+### 设置别名
+*  **git config --global alias.st status**是将**git status**区别名为**git st**
+* 配置Git的时候，加上--global是针对当前用户起作用的，如果不加，那只针对当前的仓库起作用
+* 每个仓库的Git配置文件都放在.git/config文件中,若想删除别名找到alias删除即可
+* 而当前用户的Git配置文件放在用户主目录下的一个隐藏文件.gitconfig中,配置别名也可以直接修改这个文件，如果改错了，可以删掉文件重新通过命令配置。
+### 搭建Git服务器
+1. 安装git：$ sudo apt-get install git
+2. 创建一个git用户，用来运行git服务：$ sudo adduser git
+3. 创建证书登录：收集所有需要登录的用户的公钥，就是他们自己的id_rsa.pub文件，把所有公钥导入到/home/git/.ssh/authorized_keys文件里，一行一个。
+4. 初始化Git仓库：先选定一个目录作为Git仓库，假定是/srv/sample.git，在/srv目录下输入命令：$ sudo git init --bare sample.git ,Git就会创建一个裸仓库，裸仓库没有工作区，因为服务器上的Git仓库纯粹是为了共享，所以不让用户直接登录到服务器上去改工作区，并且服务器上的Git仓库通常都以.git结尾。然后，把owner改为git：$ sudo chown -R git:git sample.git
+5. 禁用shell登录：出于安全考虑，第二步创建的git用户不允许登录shell，这可以通过编辑/etc/passwd文件完成。找到类似下面的一git:x:1001:1001:,,,:/home/git:/bin/bash改为：git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell这样，git用户可以正常通过ssh使用git，但无法登录shell，因为我们为git用户指定的git-shell每次一登录就自动退出。
+
+
 
 
