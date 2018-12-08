@@ -26,7 +26,9 @@ def pwd_instruct(input_size):
     return
 
 def ls(input_size):
-    '''This method can show your file message in this dir,it has one parameter,it rely on "os,pwd,grp,time" and other methods in this file '''
+    '''
+    This method can show your file message in this dir,it has one parameter,it rely on "os,pwd,grp,time" and other methods in this file 
+    parameters format must be "-xxx"'''
     if input_size > 3:
         print("unknown instruct")
         return
@@ -37,7 +39,6 @@ def ls(input_size):
             print(file_list[i])
         return
     else:
-        '''parameters format must be "-xxx" '''
         if not sys.argv[2].startswith("-"):
             print("unknown parameters")
             return
