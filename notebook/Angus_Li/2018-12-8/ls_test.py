@@ -61,6 +61,10 @@ class TestLs(unittest.TestCase):
             print(python_list)
             mocked_print.assert_called_with(linux_ls)
 
+if __name__ == '__main__':
+    unittest.main()
+
+
 
 
         
