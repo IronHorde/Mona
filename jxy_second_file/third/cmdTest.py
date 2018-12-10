@@ -29,7 +29,16 @@ class cmdTest(unittest.TestCase):
             print(list)
             mocked_print.assert_called_with(result)
 
-    
+    def test_get_file_list_info_return_output_list(self):
+        dir_bool=unittest.mock.Mock(return_value=False)
+        file_size=unittest.mock.Mock(return_value=4096)
+        info_str=unittest.mock.Mock(return_value="aaa")
+        with patch("os.path.isdir",dir_bool):
+            with patch("os.path.getsize",file_size):
+                with unittest.mock.patch("cmd.get_file_information",info_str):
+                    result=cmd_jxy.get_file_list_info("",file_list,"l")
+                    self.assertEqual(result[0],"totel:24")
+
     @data((0,""),(1,"0 0"),(2,"root root"))
     def test_get_user_and_group_id_return_name_or_id(self,value):
         st_info=mockOs(0,0)
